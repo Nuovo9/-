@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Task tracker</title>
+	<style>
+		body{
+		background-image: url("фон.png");
+		background-repeat: no-repeat;
+		background-size: cover;
+		}
+		.box{
+			width: 620px;
+			height: 500px;
+			background-color: #333;
+		}
+		.form-control{
+			width: 450px;
+			height: 240px;
+			font-size: 18px;
+			position: absolute;
+			left: 100px;
+			top: 80px;
+		}
+	</style>
+</head>
+<body>
+	
+	<div class="container" style="width: 400px; position: absolute; ">
+		<div id="tdlApp">
+			<div class="tdlDiv">
+      			<ul class="tdList list-unstyled">
+      			</ul>
+    		</div>
+    	</div>
+	</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+	</script>
+	<script>
+		var List = $('#tdlApp ul');
+		var Mask = 'tdl_';
+		function showTasks() {
+  			var Storage_size = localStorage.length;
+  			if (Storage_size > 0) {  
+    			for (var i = 0; i < Storage_size; i++) {
+      				var key = localStorage.key(i);
+      				if (key.indexOf(Mask) == 0) {
+        				$('<li></li>').addClass('tdItem')
+          				.attr('data-itemid', key)
+          				.text(localStorage.getItem(key))
+          				.appendTo(List);
+      				}
+    			}
+  			}
+		}
+		showTasks();
+		$('#tdlApp input').on('keydown', function (e) {
+  			if (e.keyCode != 13) return;
+  			var str = e.target.value;
+  				e.target.value = "";
+  			if (str.length > 0) {
+    			var number_Id = 0;
+    			List.children().each(function (index, el) {
+      				var element_Id = $(el).attr('data-itemid').slice(4);
+      				if (element_Id > number_Id)
+        				number_Id = element_Id;
+    			})
+    			number_Id++;
+    			localStorage.setItem(Mask + number_Id, str);
+    			$('<li></li>').addClass('tdItem')
+      			.attr('data-itemid', Mask + number_Id)
+      			.text(str).appendTo(List);
+  			}
+});
+	</script>
+</body>
+</html>
